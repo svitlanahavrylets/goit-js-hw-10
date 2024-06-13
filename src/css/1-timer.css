@@ -1,0 +1,14 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.timer {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+}

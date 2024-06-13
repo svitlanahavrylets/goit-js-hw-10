@@ -18,11 +18,21 @@ const refs = {
 };
 
 let intervalId;
-// значення з інпута створює відлік з мінусовими значеннями
-let userSelectedDate;
+// значення з інпута неправильне у відємному значенні
+let userSelectedDate = refs.inputEl.value;
 
-// таймер працює правильно
-// const userSelectedDate = new Date('2024 06 13 20:23');
+// функція для перевірки валідності дати
+// function onClose() {
+//   let userSelectedDate = new Date(refs.inputEl.value);
+//   let currentTime = new Date();
+//   if (userSelectedDate < currentTime) {
+//     window.alert('Please choose a date in the future');
+//     refs.startBtn.disabled = true;
+//   }
+// }
+
+// таймер працює правильно, якщо задати фіксовану дату
+// const userSelectedDate = new Date('2024 06 14 20:23');
 
 refs.startBtn.addEventListener('click', () => {
   intervalId = setInterval(() => {
@@ -76,13 +86,5 @@ const options = {
     console.log(selectedDates[0]);
   },
 };
-function onClose() {
-  let userSelectedDate = new Date(refs.inputEl.value);
-  let currentTime = new Date();
-  if (userSelectedDate < currentTime) {
-    window.alert('Please choose a date in the future');
-    refs.startBtn.disabled = true;
-  }
-}
 
 flatpickr('#datetime-picker', options);

@@ -16,29 +16,41 @@ const refs = {
   minutes: document.querySelector('[data-minutes]'),
   seconds: document.querySelector('[data-seconds]'),
 };
+refs.startBtn.disabled = true;
 
 let intervalId;
-// значення з інпута неправильне у відємному значенні
-let userSelectedDate = refs.inputEl.value;
+let userSelectedDate;
 
-// функція для перевірки валідності дати
-// function onClose() {
-//   let userSelectedDate = new Date(refs.inputEl.value);
-//   let currentTime = new Date();
-//   if (userSelectedDate < currentTime) {
-//     window.alert('Please choose a date in the future');
-//     refs.startBtn.disabled = true;
-//   }
-// }
+const options = {
+  enableTime: true,
+  time_24hr: true,
+  defaultDate: new Date(),
+  minuteIncrement: 1,
+  onClose(selectedDates) {
+    console.log(selectedDates[0]);
+    userSelectedDate = selectedDates[0];
 
-// таймер працює правильно, якщо задати фіксовану дату
-// const userSelectedDate = new Date('2024 06 14 20:23');
+    if (userSelectedDate < new Date()) {
+      iziToast.show({
+        title: 'Error',
+        message: 'Please choose a date in the future',
+      });
+      refs.startBtn.disabled = true;
+    } else {
+      refs.startBtn.disabled = false;
+    }
+  },
+};
+
+flatpickr('#datetime-picker', options);
 
 refs.startBtn.addEventListener('click', () => {
   intervalId = setInterval(() => {
-    const currentDate = Date.now();
-    const diff = userSelectedDate - currentDate;
+    const diff = userSelectedDate - Date.now();
     const time = convertMs(diff);
+
+    refs.startBtn.disabled = true;
+    refs.inputEl.disabled = true;
 
     refs.days.textContent = time.days.toString().padStart(2, '0');
     refs.hours.textContent = time.hours.toString().padStart(2, '0');
@@ -46,13 +58,10 @@ refs.startBtn.addEventListener('click', () => {
     refs.seconds.textContent = time.seconds.toString().padStart(2, '0');
   }, 1000);
 
-  refs.startBtn.disabled = true;
-  refs.inputEl.disabled = true;
+  setTimeout(() => {
+    clearInterval(intervalId);
+  }, userSelectedDate - Date.now());
 });
-
-setTimeout(() => {
-  clearInterval(intervalId);
-}, userSelectedDate - Date.now());
 
 function convertMs(ms) {
   // Number of milliseconds per unit of time
@@ -77,14 +86,5 @@ console.log(convertMs(2000)); // {days: 0, hours: 0, minutes: 0, seconds: 2}
 console.log(convertMs(140000)); // {days: 0, hours: 0, minutes: 2, seconds: 20}
 console.log(convertMs(24140000)); // {days: 0, hours: 6 minutes: 42, seconds: 20}
 
-const options = {
-  enableTime: true,
-  time_24hr: true,
-  defaultDate: new Date(),
-  minuteIncrement: 1,
-  onClose(selectedDates) {
-    console.log(selectedDates[0]);
-  },
-};
-
-flatpickr('#datetime-picker', options);
+// де саме потрібно прописати функцію, яка вказана у ТЗ addLeadingZero(value),
+// під час роботи таймера не можу зробити неактивним інпут

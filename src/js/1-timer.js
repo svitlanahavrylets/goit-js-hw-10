@@ -34,9 +34,15 @@ const options = {
       iziToast.show({
         title: 'Error',
         message: 'Please choose a date in the future',
+        backgroundColor: '#ef4040',
+        titleColor: '#fff',
+        titleSize: '16px',
+        progressBarColor: '#B51B1B',
+        position: 'topRight',
       });
       refs.startBtn.disabled = true;
     } else {
+      userSelectedDate = selectedDates[0];
       refs.startBtn.disabled = false;
     }
   },
@@ -47,20 +53,18 @@ flatpickr('#datetime-picker', options);
 refs.startBtn.addEventListener('click', () => {
   intervalId = setInterval(() => {
     const diff = userSelectedDate - Date.now();
-    const time = convertMs(diff);
-
-    refs.startBtn.disabled = true;
+    if (diff > 0) {
+      const time = convertMs(diff);
+      refs.days.textContent = time.days.toString().padStart(2, '0');
+      refs.hours.textContent = time.hours.toString().padStart(2, '0');
+      refs.minutes.textContent = time.minutes.toString().padStart(2, '0');
+      refs.seconds.textContent = time.seconds.toString().padStart(2, '0');
+    } else {
+      clearInterval(intervalId);
+    }
     refs.inputEl.disabled = true;
-
-    refs.days.textContent = time.days.toString().padStart(2, '0');
-    refs.hours.textContent = time.hours.toString().padStart(2, '0');
-    refs.minutes.textContent = time.minutes.toString().padStart(2, '0');
-    refs.seconds.textContent = time.seconds.toString().padStart(2, '0');
+    refs.startBtn.disabled = true;
   }, 1000);
-
-  setTimeout(() => {
-    clearInterval(intervalId);
-  }, userSelectedDate - Date.now());
 });
 
 function convertMs(ms) {
@@ -85,6 +89,3 @@ function convertMs(ms) {
 console.log(convertMs(2000)); // {days: 0, hours: 0, minutes: 0, seconds: 2}
 console.log(convertMs(140000)); // {days: 0, hours: 0, minutes: 2, seconds: 20}
 console.log(convertMs(24140000)); // {days: 0, hours: 6 minutes: 42, seconds: 20}
-
-// де саме потрібно прописати функцію, яка вказана у ТЗ addLeadingZero(value),
-// під час роботи таймера не можу зробити неактивним інпут

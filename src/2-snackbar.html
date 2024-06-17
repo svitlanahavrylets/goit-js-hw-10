@@ -5,10 +5,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Snackbar</title>
+    <link href="./css/2-snackbar.css" rel="stylesheet">
 </head>
 
 <body>
     <a href="./index.html">Go to home</a>
+
+    <form class="form">
+        <div class="delay-input-container">
+            <label class="label-delay">
+                Delay (ms)
+                <input class="input" type="number" name="delay" required />
+            </label>
+        </div>
+        <fieldset class="state">
+            <legend>State</legend>
+            <div class="label-state">
+                <label>
+                    <input class="radio-button" type="radio" name="state" value="fulfilled" required />
+                    Fulfilled
+                </label>
+                <label>
+                    <input class="radio-button" type="radio" name="state" value="rejected" required />
+                    Rejected
+                </label>
+            </div>
+        </fieldset>
+
+        <button class="button" type="submit">Create notification</button>
+    </form>
+    <script src="./js/2-snackbar.js" type="module" defer></script>
 </body>
 
 </html>
